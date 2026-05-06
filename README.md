@@ -1,1 +1,2 @@
-# ofek-react-final
+# ofek_react-final
+Self-confidence app

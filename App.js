@@ -1,171 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Layout, Trophy, Target, BarChart3, CheckCircle2, Flame, Circle, User, Settings, LogOut } from 'lucide-react';
-import './App.css';
+import React from 'react';
+import { Layout, Trophy, Target, User, BarChart3 } from 'lucide-react';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('dashboard');
-  const [userName, setUserName] = useState('אופק');
-  const [streak, setStreak] = useState(3);
-  const [completedTasks, setCompletedTasks] = useState(2);
-  const [totalTasks, setTotalTasks] = useState(5);
-  const [totalProgress, setTotalProgress] = useState(47); // אחוז התקדמות כללי
-  const [level, setLevel] = useState(3);
-  const [points, setPoints] = useState(2450);
-
-  // משימות יומיות
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: 'ליצור קשר עין בשיחה',
-      description: 'תרגיל בסיסי לשיפור הביטחון הבינאישי.',
-      difficulty: 'קל',
-      completed: false,
-      points: 50,
-      category: 'חברתי'
-    },
-    {
-      id: 2,
-      title: 'להציע רעיון בישיבה/כיתה',
-      description: 'מתאים במיוחד לשיפור ביטחון בסביבה פורמלית.',
-      difficulty: 'בינוני',
-      completed: true,
-      points: 100,
-      category: 'קריירה'
-    },
-    {
-      id: 3,
-      title: 'לדבר על עצמי בפני קבוצה',
-      description: 'חזקו את הביטחון שלכם בדיבור ציבורי.',
-      difficulty: 'קשה',
-      completed: false,
-      points: 150,
-      category: 'ציבורי'
-    },
-    {
-      id: 4,
-      title: 'להשלים אתגר של יום קודם',
-      description: 'בנו על ההצלחות שלכם.',
-      difficulty: 'בינוני',
-      completed: true,
-      points: 75,
-      category: 'כללי'
-    },
-    {
-      id: 5,
-      title: 'לשתול משוב חיובי לחברים',
-      description: 'למדו להעריך את מסביבכם.',
-      difficulty: 'קל',
-      completed: false,
-      points: 80,
-      category: 'חברתי'
-    }
-  ]);
-
-  const [challenges, setChallenges] = useState([
-    {
-      id: 1,
-      title: 'אתגר השבוע: דברו בשיחה לפחות פעמיים',
-      description: 'השתתפו בשיחות יומיות ותרגלו דיבור.',
-      difficulty: 'בינוני',
-      daysLeft: 5,
-      reward: 500,
-      completed: false
-    },
-    {
-      id: 2,
-      title: 'מאתגר האישי: עשו משהו שמעודד אתכם',
-      description: 'בחרו משימה שמרגישה בלתי אפשרית וזעזעו אותה.',
-      difficulty: 'קשה',
-      daysLeft: 2,
-      reward: 1000,
-      completed: false
-    },
-    {
-      id: 3,
-      title: 'רצף של 7 ימים',
-      description: 'השלימו לפחות משימה אחת כל יום למשך שבוע.',
-      difficulty: 'קל',
-      daysLeft: 7,
-      reward: 300,
-      completed: false
-    }
-  ]);
-
-  const [progressData, setProgressData] = useState([
-    { day: 'ראשון', completed: 4, total: 5 },
-    { day: 'שני', completed: 5, total: 5 },
-    { day: 'שלישי', completed: 3, total: 5 },
-    { day: 'רביעי', completed: 2, total: 5 },
-    { day: 'חמישי', completed: 5, total: 5 },
-    { day: 'שישי', completed: 4, total: 5 },
-    { day: 'שבת', completed: 2, total: 5 }
-  ]);
-
-  // טוגל משימה
-  const toggleTask = (id) => {
-    setTasks(tasks.map(task => 
-      task.id === id 
-        ? { ...task, completed: !task.completed }
-        : task
-    ));
-    
-    const task = tasks.find(t => t.id === id);
-    if (!task.completed) {
-      setCompletedTasks(prev => Math.min(prev + 1, totalTasks));
-      setPoints(prev => prev + task.points);
-    } else {
-      setCompletedTasks(prev => Math.max(prev - 1, 0));
-      setPoints(prev => Math.max(prev - task.points, 0));
-    }
-  };
-
-  // טוגל אתגר
-  const toggleChallenge = (id) => {
-    setChallenges(challenges.map(challenge => 
-      challenge.id === id 
-        ? { ...challenge, completed: !challenge.completed }
-        : challenge
-    ));
-  };
-
   return (
-    <div className="app-container" style={{ direction: 'rtl' }}>
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="logo">
-          <div className="logo-icon">⚡</div>
-          <h2>BoostMe</h2>
-        </div>
-
-        <nav className="nav-menu">
-          <button 
-            className={`nav-item ${currentPage === 'dashboard' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('dashboard')}
-          >
-            <Layout size={20} />
-            <span>דאשבורד</span>
-          </button>
-          <button 
-            className={`nav-item ${currentPage === 'challenges' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('challenges')}
-          >
-            <Target size={20} />
-            <span>אתגרים</span>
-          </button>
-          <button 
-            className={`nav-item ${currentPage === 'progress' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('progress')}
-          >
-            <BarChart3 size={20} />
-            <span>התקדמות</span>
-          </button>
-          <button 
-            className={`nav-item ${currentPage === 'profile' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('profile')}
-          >
-            <User size={20} />
-            <span>פרופיל</span>
-          </button>
+    <div style={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Sidebar[cite: 2] */}
+      <aside style={{ 
+        width: '240px', 
+        backgroundColor: 'white', 
+        padding: '20px',
+        borderRight: '1px solid #ddd' 
+      }}>
+        <h2 style={{ color: 'var(--primary)', fontWeight: 'bold' }}>BoostMe</h2>
+        <nav style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+            <Layout size={20} /> Dashboard
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+            <Target size={20} /> Challenges
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+            <BarChart3 size={20} /> Progress
+          </div>
         </nav>
 
         <div className="sidebar-footer">
